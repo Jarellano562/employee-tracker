@@ -95,3 +95,24 @@ function mainMenu() {
         });
 }
 
+//VIEW ALL EMPLOYEES-------------------------------------------------------------- 
+function viewAllEmp() {
+    let query = "Select e.id, e.first_name, e.last_name, role.title, department.name AS department, role.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC";
+    connection.query(query, function (err, res) {
+        if (err) return err;
+        console.log("\n");
+        console.table(res);
+
+        //MAIN MENU LOOP-----------------------------------------------------------
+        mainMenu();
+    });
+}
+
+//VIEW ALL EMPLOYEES - DEPARTMENT--------------------------------------------------
+function viewAllEmpByDept() {
+    let deptArr = []; //GLOBAL ARRAY GOT DEPARTMENT--------------------------------
+    //PROMISE----------------------------------------------------------------------
+    promisemysql.createConnection(connectionPath).then((conn) => {
+        return conn.query('SELECT name FROM department');
+    }).then(function (value) {
+
